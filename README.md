@@ -18,7 +18,7 @@ git clone <repository-url>
 4. Start the server.
 5. Access the application through your browser.
 ## Team Members
-- Abdallah Mimoun ENCHEIKH
+- Abdallah Mimoun BENCHEIKH
 - Aya SAHRAOUI
 - Souhaib DJENANE
 - Kawther Ikhlas BOUREGAA
