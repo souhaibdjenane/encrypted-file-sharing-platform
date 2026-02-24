@@ -11,7 +11,7 @@ The objective of this project is to implement a secure file sharing solution usi
 ## How to Run
 1. Clone the repository:  
 ```bash  
-git clone <repository-url>
+git clone https://github.com/souhaibdjenane/encrypted-file-sharing-platform
 ```
 2. Navigate to the project directory.
 3. Install required dependencies.
