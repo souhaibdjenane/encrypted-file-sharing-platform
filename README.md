@@ -25,6 +25,6 @@ git clone <repository-url>
 - Sondes GASMI
 
 ## Course Information
-Course: Computer Network and Security
-Professor: Dr. Karim Lounis
-Academic Year: 2025 – 2026
+- Course: Computer Network and Security
+- Professor: Dr. Karim Lounis
+- Academic Year: 2025 – 2026
