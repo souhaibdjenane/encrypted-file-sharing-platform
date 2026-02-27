@@ -1,0 +1,118 @@
+/* ─── Light Mode ─────────────────────────────────────────── */
+:root {
+    /* --- Brand / Accent --- */
+    --vs-primary: #008cc4;
+    --vs-primary-rgb: 0 140 196;
+    /* main CTA, buttons, links        */
+    --vs-primary-hover: #1c7398;
+    /* hover state of primary           */
+    --vs-primary-light: #e9f6fe;
+    /* very light blue for backgrounds  */
+    --vs-secondary: #02B7DF;
+    --vs-secondary-rgb: 2 183 223;
+    /* gradient end / secondary accent  */
+
+    /* --- Backgrounds --- */
+    --vs-bg: #ffffff;
+    /* page background                  */
+    --vs-bg-subtle: #f8fafc;
+    /* cards, panels                    */
+    --vs-bg-muted: #f1f5f9;
+    /* inputs, subtle sections          */
+
+    /* --- Borders --- */
+    --vs-border: #e2e8f0;
+    --vs-border-rgb: 226 232 240;
+    /* default border                   */
+    --vs-border-strong: #cbd5e1;
+    --vs-border-strong-rgb: 203 213 225;
+    /* stronger border / dividers       */
+
+    /* --- Text --- */
+    --vs-text: #0f172a;
+    /* primary text                     */
+    --vs-text-muted: #64748b;
+    /* secondary / descriptive text     */
+    --vs-text-subtle: #94a3b8;
+    /* placeholder / disabled text      */
+
+    /* --- Semantic --- */
+    --vs-danger: #dc2626;
+    --vs-danger-rgb: 220 38 38;
+    /* errors, destructive actions      */
+    --vs-danger-bg: #fef2f2;
+    /* error background                 */
+    --vs-danger-border: #fecaca;
+    /* error border                     */
+
+    --vs-success: #059669;
+    /* confirmations, success states    */
+    --vs-success-bg: #ecfdf5;
+    /* success background               */
+
+    --vs-warning: #d97706;
+    /* warnings                         */
+    --vs-warning-bg: #fffbeb;
+    /* warning background               */
+
+    /* --- Header --- */
+    --vs-header-bg: rgba(255, 255, 255, 0.8);
+    --vs-header-border: rgba(0, 0, 0, 0.08);
+    --vs-header-border-rgb: 0 0 0;
+}
+
+/* ─── Dark Mode ──────────────────────────────────────────── */
+.dark {
+    /* --- Brand / Accent --- */
+    --vs-primary: #1c7398;
+    --vs-primary-rgb: 28 115 152;
+    /* slightly lighter for dark bg     */
+    --vs-primary-hover: #008cc4;
+    --vs-primary-light: rgba(0, 179, 255, 0.15);
+    --vs-secondary: #008fc3;
+    --vs-secondary-rgb: 34 141 213;
+
+    /* --- Backgrounds --- */
+    --vs-bg: #0d0e10;
+    /* zinc-950                         */
+    --vs-bg-subtle: rgb(22, 27, 32);
+    /* zinc-900                         */
+    --vs-bg-muted: #24292c;
+    /* zinc-800                         */
+
+    /* --- Borders --- */
+    --vs-border: #212834;
+    --vs-border-rgb: 24 24 27;
+    /* Zinc-900                         */
+    --vs-border-strong: #0e0e0f;
+    --vs-border-strong-rgb: 39 39 42;
+    /* Zinc-800                         */
+
+    /* --- Text --- */
+    --vs-text: #fafafa;
+    /* zinc-50                          */
+    --vs-text-muted: #a1a1aa;
+    /* zinc-400                         */
+    --vs-text-subtle: #71717a;
+    /* zinc-500                         */
+
+    /* --- Semantic --- */
+    --vs-danger: #f87171;
+    --vs-danger-rgb: 248 113 113;
+    /* red-400                          */
+    --vs-danger-bg: rgba(239, 68, 68, 0.12);
+    --vs-danger-border: rgba(239, 68, 68, 0.30);
+
+    --vs-success: #34d399;
+    /* emerald-400                      */
+    --vs-success-bg: rgba(52, 211, 153, 0.10);
+
+    --vs-warning: #fbbf24;
+    /* amber-400                        */
+    --vs-warning-bg: rgba(26, 26, 24, 0.1);
+
+    /* --- Header --- */
+    --vs-header-bg: rgba(9, 9, 11, 0.8);
+    --vs-header-border: #19191b;
+    --vs-header-border-rgb: 39 39 42;
+}

@@ -1,0 +1,22 @@
+/* src/styles/fonts.css */
+
+/* 
+ * Sansation - General UI Font 
+ * Imported directly from Google Fonts 
+ */
+@import url('https://fonts.googleapis.com/css2?family=Sansation:wght@300;400;700&display=swap');
+
+
+/* 
+ * Cairo - Arabic Script Font 
+ * Imported directly from Google Fonts 
+ */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+    font-family: 'Alyamama';
+    src: local('Alyamama');
+    /* Will use local system font if installed, or fallback to Cairo below */
+    font-weight: 100 900;
+    font-display: swap;
+}

@@ -1,0 +1,51 @@
+@import './styles/fonts.css';
+@import './styles/theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Sansation', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html[dir='rtl'] {
+    font-family: 'Alyamama', 'Cairo', 'Sansation', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-vs-bg text-vs-text;
+    margin: 0;
+  }
+
+  ::selection {
+    background-color: rgb(var(--vs-primary-rgb) / 0.3);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-vs-bg-subtle;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-vs-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-vs-border-strong;
+  }
+}
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
