@@ -13,7 +13,7 @@ export function GoogleButton({ mode = 'signin', className = '', ...props }: Goog
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/dashboard`,
+                redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}dashboard`,
                 queryParams: {
                     access_type: 'offline',
                     prompt: 'consent',
