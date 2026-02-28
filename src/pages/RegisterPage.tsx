@@ -161,10 +161,6 @@ export function RegisterPage() {
             {/* Left Column: Visual/Branding (Desktop only) */}
             <div className="hidden lg:flex lg:w-1/2 relative bg-vs-bg-subtle items-start justify-center p-8 lg:p-12 lg:pt-26 overflow-hidden border-r border-vs-border">
                 {/* Decorative background elements */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-vs-secondary/10 via-transparent to-vs-primary/10" />
-                <div className="absolute top-1/4 -left-20 w-80 h-80 bg-vs-primary/5 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-vs-secondary/5 rounded-full blur-3xl" />
-
                 <div className="relative text-center space-y-6 max-w-sm">
                     <div className="flex justify-center">
                         <div className="p-4 rounded-3xl bg-vs-bg border border-vs-border">
