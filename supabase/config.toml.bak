@@ -1,0 +1,117 @@
+# supabase/config.toml
+# Local development configuration for Supabase CLI.
+# Run `supabase start` to spin up the local stack.
+#
+# Reference: https://supabase.com/docs/guides/local-development
+
+[project]
+# Match your actual Supabase project reference
+id = "duqbxtucdgrhwcfohfqd"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://localhost"
+openai_api_key = "env(OPENAI_API_KEY)"
+
+# Email testing — in local dev, all emails go to Inbucket
+[inbucket]
+enabled = true
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+enabled = true
+# 500 MB max upload size (matches Edge Function validation)
+file_size_limit = "524288000"
+
+# Local storage buckets
+[[storage.buckets]]
+name = "encrypted-files"
+public = false
+# Only allow file uploads up to 500 MB
+file_size_limit = "524288000"
+allowed_mime_types = [
+    # Documents
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    # Archives
+    "application/zip",
+    "application/x-7z-compressed",
+    "application/x-tar",
+    "application/gzip",
+    # Images
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+    # Video
+    "video/mp4",
+    "video/webm",
+    # Audio
+    "audio/mpeg",
+    "audio/wav",
+    # Text / Code
+    "text/plain",
+    "text/csv",
+    "application/json",
+    # Generic encrypted blobs
+    "application/octet-stream",
+]
+
+[auth]
+enabled = true
+port = 54324
+site_url = "http://localhost:5173"
+additional_redirect_urls = [
+    "http://localhost:5173",
+    "https://souhaibdjenane.github.io",
+]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_sign_ins = false
+enable_manual_linking = false
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false   # set true in production
+
+[auth.mfa]
+max_enrolled_factors = 10
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+
+[analytics]
+enabled = false

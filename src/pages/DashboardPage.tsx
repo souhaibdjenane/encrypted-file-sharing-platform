@@ -7,10 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import EditIcon from '../assets/Edit.svg'
 import LockIcon from '../assets/Lock.svg'
-import LinkIcon from '../assets/Link.svg'
-import ShieldIcon from '../assets/Lock.svg' // Reuse Lock for encrypted files
-import Storage from '../assets/Storage.svg'
-import Logo from '../assets/VaultShare-logo.svg'
+import { FileUploader } from '../components/files/FileUploader'
+import { FileList } from '../components/files/FileList'
 
 /* ─── Avatar Uploader ──────────────────────────────────── */
 function AvatarUploader({
@@ -177,9 +175,9 @@ export function DashboardPage() {
     }
 
     const vaultStats = [
-        { label: t('dashboard.filesEncrypted'), icon: ShieldIcon, value: '0' },
-        { label: t('dashboard.storageUsed'), icon: Storage, value: '0 MB' },
-        { label: t('dashboard.activeLinks'), icon: LinkIcon, value: '0' },
+        { label: t('dashboard.filesEncrypted'), value: '0', icon: '🔒' },
+        { label: t('dashboard.storageUsed'), value: '0 MB', icon: '💾' },
+        { label: t('dashboard.activeLinks'), value: '0', icon: '🔗' },
     ]
 
     return (
@@ -292,24 +290,20 @@ export function DashboardPage() {
                                     <p className="text-xs text-vs-text-subtle uppercase tracking-widest">{stat.label}</p>
                                     <p className="text-3xl font-bold text-vs-text">{stat.value}</p>
                                 </div>
-                                <div className="w-20 h-20 rounded-lg bg-vs-primary/5 flex items-center justify-center group-hover:bg-vs-primary/10 transition-colors">
-                                    <img src={stat.icon} alt="" className="w-12 h-12 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                <div className="w-14 h-14 rounded-lg bg-vs-primary/5 flex items-center justify-center group-hover:bg-vs-primary/10 transition-colors">
+                                    <span className="text-3xl" role="img">{stat.icon}</span>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* ── Upload Drop Zone ──────────────────────────────── */}
-                <div className="rounded-2xl border border-dashed border-vs-border bg-vs-bg-subtle p-8 text-center space-y-4 hover:border-vs-primary transition-colors duration-300 cursor-pointer group">
-                    <div className="flex justify-center group-hover:scale-110 transition-transform duration-200">
-                        <img src={Logo} alt="" className="w-24 h-24 opacity-80" />
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-vs-text font-semibold">{t('dashboard.dropTitle')}</p>
-                        <p className="text-sm text-vs-text-muted">{t('dashboard.dropSubtext')}</p>
-                    </div>
-                    <Button variant="secondary" size="md">{t('dashboard.browse')}</Button>
+                {/* ── Upload & Secure File Zone ──────────────────────────────── */}
+                <div className="space-y-4">
+                    <h2 className="text-sm font-semibold text-vs-text-muted uppercase tracking-widest">
+                        {t('dashboard.uploadNewFile', 'Secure Upload')}
+                    </h2>
+                    <FileUploader />
                 </div>
 
                 {/* ── Recent Files ──────────────────────────────────── */}
@@ -317,8 +311,8 @@ export function DashboardPage() {
                     <h2 className="text-sm font-semibold text-vs-text-muted uppercase tracking-widest">
                         {t('dashboard.recentFiles')}
                     </h2>
-                    <div className="rounded-xl border border-vs-border bg-vs-bg p-8 text-center text-vs-text-subtle text-sm">
-                        {t('dashboard.noFiles')}
+                    <div className="rounded-xl border border-vs-border bg-vs-bg overflow-hidden">
+                        <FileList />
                     </div>
                 </div>
             </div>
