@@ -114,6 +114,7 @@ export const FileList: React.FC = () => {
                 if (parsed && parsed.error && Array.isArray(parsed.error.errors)) {
                     errorMessage = parsed.error.errors.map((e: { message: string }) => e.message).join('; ');
                 }
+            } catch {
                 // Not a JSON error, use original message
             }
             setError(errorMessage);
