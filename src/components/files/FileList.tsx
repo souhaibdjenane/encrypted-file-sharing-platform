@@ -3,7 +3,7 @@
  */
 import React from 'react'
 import { useFiles } from '../../hooks/useFiles'
-import type { DecryptedFile } from '../../hooks/useFiles'
+import type { DecryptedFile } from '../../types/files'
 import { FileCard } from './FileCard'
 
 // ── Skeleton card ──────────────────────────────────────────────────────────────
