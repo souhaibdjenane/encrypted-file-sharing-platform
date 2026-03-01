@@ -8,7 +8,7 @@ import { DownloadButton } from './DownloadButton'
 import { AuditLogPanel } from './AuditLogPanel'
 import { ShareModal } from '../sharing/ShareModal'
 import { useAuthStore } from '../../store/authStore'
-import type { DecryptedFile } from '../../hooks/useFiles'
+import type { DecryptedFile } from '../../types/files'
 
 const MIME_ICON: Record<string, { emoji: string; color: string }> = {
     'application/pdf': { emoji: '📄', color: 'bg-red-50 text-red-600' },
