@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useCrypto } from '../../contexts/CryptoContext';
 import { unwrapFileKey } from '../../crypto/keyWrap';
 import { decryptMetadata, decryptFile } from '../../crypto/decrypt';
-import { arrayBufferToBase64, base64ToArrayBuffer } from '../../crypto/utils';
+import { base64ToArrayBuffer } from '../../crypto/utils';
 import { filesApi } from '../../api/filesApi';
 import DocumentIcon from '../../assets/Document.svg';
 import { ShareModal } from '../sharing/ShareModal';
@@ -114,7 +114,6 @@ export const FileList: React.FC = () => {
                 if (parsed && parsed.error && Array.isArray(parsed.error.errors)) {
                     errorMessage = parsed.error.errors.map((e: { message: string }) => e.message).join('; ');
                 }
-            } catch (parseError) {
                 // Not a JSON error, use original message
             }
             setError(errorMessage);
