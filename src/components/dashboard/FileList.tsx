@@ -13,7 +13,7 @@ import { ManageAccessModal } from '../sharing/ManageAccessModal';
 
 import type { DecryptedFile } from '../../types/files';
 
-export const FileList: React.FC = () => {
+export function FileList() {
     const { t } = useTranslation();
     const { user } = useAuth();
     const { keyPair, keysReady } = useCrypto();
@@ -265,3 +265,19 @@ export const FileList: React.FC = () => {
         </div>
     );
 };
+
+interface ShareModalProps {
+    isOpen: boolean
+    onClose: () => void
+    fileId: string
+    fileName: string
+    wrappedKeyBase64: string
+}
+
+interface ManageAccessModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    fileId: string;
+    fileName: string;
+}
+```
