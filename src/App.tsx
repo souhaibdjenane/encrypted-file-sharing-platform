@@ -6,6 +6,10 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { SharedPage } from '@/pages/SharedPage'
+import { PublicSharePage } from '@/pages/PublicSharePage'
+import { SettingsPage } from '@/pages/SettingsPage'
+import { CryptoProvider } from '@/contexts/CryptoContext'
 
 function AppRoutes() {
   // Initialize auth state globally — subscribes to Supabase session
@@ -18,10 +22,13 @@ function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/s/:token" element={<PublicSharePage />} />
 
         {/* Protected routes */}
         <Route element={<AuthGuard />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/shared" element={<SharedPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* Catch-all */}
@@ -41,7 +48,9 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <AppRoutes />
+      <CryptoProvider>
+        <AppRoutes />
+      </CryptoProvider>
     </BrowserRouter>
   )
 }
