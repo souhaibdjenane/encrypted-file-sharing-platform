@@ -18,7 +18,8 @@ import { validateFileType } from '../crypto/magicBytes'
 import { filesApi } from '../api/filesApi'
 import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
-// @ts-ignore - Vite specific syntax
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - Vite specific syntax which may or may not be an error depending on environment
 import EncryptWorkerInstance from '../workers/encrypt.worker?worker'
 
 // Worker type — matches pill in encrypt.worker.ts

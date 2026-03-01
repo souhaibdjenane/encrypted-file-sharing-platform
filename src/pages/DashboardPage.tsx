@@ -135,7 +135,7 @@ function PasswordChanger({ onClose }: { onClose: () => void }) {
 
 /* ─── Dashboard ─────────────────────────────────────────── */
 export function DashboardPage() {
-    const { user, profile, setProfile } = useAuthStore()
+    const { profile, setProfile } = useAuthStore()
     const { t } = useTranslation()
 
     // Profile editor state (lives in the welcome banner)

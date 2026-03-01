@@ -39,9 +39,10 @@ export const ManageAccessModal: React.FC<ManageAccessModalProps> = ({
 
             if (fetchError) throw new Error(fetchError.message);
             setShares(data || []);
-        } catch (err: any) {
-            console.error('Error fetching shares:', err);
-            setError(err.message || 'Failed to load access list.');
+        } catch (err) {
+            const error = err as Error;
+            console.error('Error fetching shares:', error);
+            setError(error.message || 'Failed to load access list.');
         } finally {
             setIsLoading(false);
         }

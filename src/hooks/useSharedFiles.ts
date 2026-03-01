@@ -10,22 +10,7 @@ import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
 import { unwrapFileKey } from '../crypto/keyWrap'
 import { decryptMetadata } from '../crypto/decrypt'
-
-export interface SharedFile {
-    id: string
-    shareId: string
-    sharedBy: string
-    file_id: string
-    storage_path: string
-    name: string
-    size: number
-    mimeType: string
-    created_at: string
-    expires_at: string | null
-    ivBase64: string
-    wrappedKeyBase64: string
-    canDownload: boolean
-}
+import type { SharedFile } from '../types/files'
 
 async function fetchSharedFiles(userId: string, privateKey: CryptoKey): Promise<SharedFile[]> {
     // Fetch shares joined with files
@@ -56,7 +41,7 @@ async function fetchSharedFiles(userId: string, privateKey: CryptoKey): Promise<
 
     for (const row of data) {
         try {
-            const file = Array.isArray(row.files) ? row.files[0] : row.files as any
+            const file = Array.isArray(row.files) ? row.files[0] : row.files as { id: string; storage_path: string; encrypted_metadata: { ciphertext: string; iv: string }; iv: string; created_at: string }
 
             // Get the user's wrapped key for this file
             const { data: keyRow } = await supabase

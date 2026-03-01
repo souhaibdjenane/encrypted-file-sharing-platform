@@ -39,7 +39,7 @@ Deno.serve(async (req: Request) => {
 
     try {
         // 1. Authenticate
-        const { user, supabase, adminSupabase } = await verifyAuth(req)
+        const { user, adminSupabase } = await verifyAuth(req)
 
         // 2. Rate limit: 10 per minute
         await rateLimit(`upload:${user.id}`, 10, 60)

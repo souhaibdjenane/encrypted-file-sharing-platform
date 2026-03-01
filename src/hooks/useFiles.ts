@@ -10,19 +10,7 @@ import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
 import { unwrapFileKey } from '../crypto/keyWrap'
 import { decryptMetadata } from '../crypto/decrypt'
-
-export interface DecryptedFile {
-    id: string
-    owner_id: string
-    storage_path: string
-    name: string
-    size: number
-    mimeType: string
-    created_at: string
-    expires_at: string | null
-    ivBase64: string
-    wrappedKeyBase64: string
-}
+import type { DecryptedFile } from '../types/files'
 
 async function fetchAndDecryptFiles(
     userId: string,

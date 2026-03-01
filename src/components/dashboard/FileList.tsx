@@ -11,17 +11,7 @@ import DocumentIcon from '../../assets/Document.svg';
 import { ShareModal } from '../sharing/ShareModal';
 import { ManageAccessModal } from '../sharing/ManageAccessModal';
 
-export interface DecryptedFile {
-    id: string;
-    owner_id: string;
-    name: string;
-    size: number;
-    mimeType: string;
-    created_at: string;
-    isShared: boolean;
-    ivBase64: string;
-    wrappedKeyBase64: string;
-}
+import type { DecryptedFile } from '../../types/files';
 
 export const FileList: React.FC = () => {
     const { t } = useTranslation();
@@ -49,6 +39,7 @@ export const FileList: React.FC = () => {
                     id,
                     owner_id,
                     created_at,
+                    expires_at,
                     iv,
                     encrypted_metadata,
                     file_keys!inner(wrapped_key)
@@ -87,6 +78,7 @@ export const FileList: React.FC = () => {
                         size: decryptedMeta.size || 0,
                         mimeType: decryptedMeta.type || 'application/octet-stream',
                         created_at: fileRow.created_at,
+                        expires_at: fileRow.expires_at || null,
                         isShared: false,
                         ivBase64: fileRow.iv,
                         wrappedKeyBase64: wrappedKeyBase64,
@@ -101,6 +93,7 @@ export const FileList: React.FC = () => {
                         size: 0,
                         mimeType: 'unknown',
                         created_at: fileRow.created_at,
+                        expires_at: fileRow.expires_at || null,
                         isShared: false,
                         ivBase64: fileRow.iv,
                         wrappedKeyBase64: Array.isArray(fileRow.file_keys)
@@ -115,7 +108,16 @@ export const FileList: React.FC = () => {
         } catch (err) {
             const error = err as Error;
             console.error('Error loading files:', error);
-            setError(error.message || 'Failed to load files');
+            let errorMessage = error.message || 'Failed to load files';
+            try {
+                const parsed = JSON.parse(error.message);
+                if (parsed && parsed.error && Array.isArray(parsed.error.errors)) {
+                    errorMessage = parsed.error.errors.map((e: { message: string }) => e.message).join('; ');
+                }
+            } catch (parseError) {
+                // Not a JSON error, use original message
+            }
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }

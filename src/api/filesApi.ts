@@ -50,6 +50,7 @@ export interface RevokeAccessResponse {
  */
 async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promise<T> {
     const { data, error } = await supabase.functions.invoke<T>(functionName, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         body: body as any,
     })
 
