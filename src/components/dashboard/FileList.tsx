@@ -71,14 +71,14 @@ export const FileList: React.FC = () => {
                     // Extract wrapped key (assuming one record per user due to unique constraint)
                     const wrappedKeyBase64 = Array.isArray(fileRow.file_keys)
                         ? fileRow.file_keys[0].wrapped_key
-                        : (fileRow.file_keys as any).wrapped_key;
+                        : (fileRow.file_keys as { wrapped_key: string }).wrapped_key;
 
                     // Unwrap the AES key
                     const fileKey = await unwrapFileKey(wrappedKeyBase64, keyPair.privateKey);
 
                     // Decrypt the metadata JSON
                     const metaObj = fileRow.encrypted_metadata as { ciphertext: string; iv: string };
-                    const decryptedMeta = await decryptMetadata(metaObj.ciphertext, metaObj.iv, fileKey) as any;
+                    const decryptedMeta = await decryptMetadata(metaObj.ciphertext, metaObj.iv, fileKey) as { name?: string; size?: number; type?: string };
 
                     decryptedList.push({
                         id: fileRow.id,
@@ -105,16 +105,17 @@ export const FileList: React.FC = () => {
                         ivBase64: fileRow.iv,
                         wrappedKeyBase64: Array.isArray(fileRow.file_keys)
                             ? fileRow.file_keys[0].wrapped_key
-                            : (fileRow.file_keys as any).wrapped_key,
+                            : (fileRow.file_keys as { wrapped_key: string }).wrapped_key,
                     });
                 }
             }
 
             setFiles(decryptedList);
 
-        } catch (err: any) {
-            console.error('Error loading files:', err);
-            setError(err.message || 'Failed to load files');
+        } catch (err) {
+            const error = err as Error;
+            console.error('Error loading files:', error);
+            setError(error.message || 'Failed to load files');
         } finally {
             setIsLoading(false);
         }
@@ -156,9 +157,10 @@ export const FileList: React.FC = () => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-        } catch (err: any) {
-            console.error('Download failed:', err);
-            alert(`Download failed: ${err.message}`);
+        } catch (err) {
+            const error = err as Error;
+            console.error('Download failed:', error);
+            alert(`Download failed: ${error.message}`);
         } finally {
             setDownloadingFileId(null);
         }

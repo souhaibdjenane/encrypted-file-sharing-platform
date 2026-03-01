@@ -59,9 +59,10 @@ export const ManageAccessModal: React.FC<ManageAccessModalProps> = ({
             await filesApi.revokeAccess({ shareId });
             // Update local state to show as revoked
             setShares(shares.map(s => s.id === shareId ? { ...s, revoked: true } : s));
-        } catch (err: any) {
-            console.error('Revoke error:', err);
-            alert(`Revocation failed: ${err.message}`);
+        } catch (err) {
+            const error = err as Error
+            console.error('Revoke error:', error);
+            alert(`Revocation failed: ${error.message}`);
         } finally {
             setRevokingId(null);
         }

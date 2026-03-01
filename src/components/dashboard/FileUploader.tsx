@@ -99,9 +99,10 @@ export const FileUploader: React.FC = () => {
             setFile(null); // Reset
             if (fileInputRef.current) fileInputRef.current.value = '';
 
-        } catch (err: any) {
-            console.error('Upload Error:', err);
-            setError(err.message || 'An error occurred during upload.');
+        } catch (err) {
+            const error = err as Error;
+            console.error('Upload Error:', error);
+            setError(error.message || 'An error occurred during upload.');
         } finally {
             setIsUploading(false);
             if (progress !== 100) setProgress(0);
