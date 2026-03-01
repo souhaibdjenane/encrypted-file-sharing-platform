@@ -3,6 +3,7 @@
  */
 import React from 'react'
 import { useFiles } from '../../hooks/useFiles'
+import type { DecryptedFile } from '../../hooks/useFiles'
 import { FileCard } from './FileCard'
 
 // ── Skeleton card ──────────────────────────────────────────────────────────────
@@ -83,7 +84,7 @@ export function FileList() {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {files.map(file => (
+            {files.map((file: DecryptedFile) => (
                 <FileCard key={file.id} file={file} />
             ))}
         </div>
