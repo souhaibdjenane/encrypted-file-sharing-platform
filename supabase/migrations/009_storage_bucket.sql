@@ -6,8 +6,8 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('encrypted-files', 'encrypted-files', false)
 ON CONFLICT (id) DO NOTHING;
 
--- 2. Enable RLS on storage.objects (usually enabled by default in Supabase)
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- 2. RLS on storage.objects is enabled by default in Supabase.
+-- Attempting to ALTER TABLE here causes permission errors for the migration user.
 
 -- 3. Policy: Allow users to upload to their own folder
 -- Path format: {auth.uid()}/{uuid}-{filename}
