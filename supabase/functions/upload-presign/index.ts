@@ -69,17 +69,19 @@ Deno.serve(async (req: Request) => {
         const storagePath = `${user.id}/${uuid}-${safeName}`
 
         // 5. Create signed upload URL (valid for 15 minutes)
+        console.log(`[upload-presign] Creating signed upload URL for path: ${storagePath}`)
         const { data, error } = await adminSupabase.storage
             .from(STORAGE_BUCKET)
             .createSignedUploadUrl(storagePath)
 
         if (error || !data) {
-            logger.error('Failed to create signed upload URL', {
+            console.error('[upload-presign] STORAGE_ERROR:', {
+                message: error?.message,
                 userId: user.id,
                 storagePath,
-                error: error?.message,
+                bucket: STORAGE_BUCKET
             })
-            throw new AppError(500, 'Could not generate upload URL', 'STORAGE_ERROR')
+            throw new AppError(500, `Storage error: ${error?.message || 'Could not generate upload URL'}`, 'STORAGE_ERROR')
         }
 
         logger.info('Presigned upload URL generated', {
