@@ -34,9 +34,12 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
       - name: Deploy to GitHub Pages
-        run: npx gh-pages -d dist --user "github-actions-bot <actions@github.com>"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          user_name: 'github-actions-bot'
+          user_email: 'actions@github.com'
 
   # ── Job 2: Deploy Supabase Edge Functions ─────────────────────────────────
   deploy-edge-functions:
