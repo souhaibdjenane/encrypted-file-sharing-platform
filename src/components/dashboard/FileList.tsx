@@ -265,19 +265,3 @@ export function FileList() {
         </div>
     );
 };
-
-interface ShareModalProps {
-    isOpen: boolean
-    onClose: () => void
-    fileId: string
-    fileName: string
-    wrappedKeyBase64: string
-}
-
-interface ManageAccessModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    fileId: string;
-    fileName: string;
-}
-```
