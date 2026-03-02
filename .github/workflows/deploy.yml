@@ -34,7 +34,7 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
       - name: Deploy to GitHub Pages
-        run: npx gh-pages -d dist --user "github-actions-bot <github-actions[bot]@users.noreply.github.com>"
+        run: npx gh-pages -d dist --user "github-actions-bot <actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
