@@ -53,11 +53,15 @@ export function CryptoProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (user?.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             initKeys(user.id)
         } else {
             // User logged out — clear keys from memory
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeyPair(null)
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeysReady(false)
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeyError(null)
         }
     }, [user?.id, initKeys])
@@ -73,6 +77,7 @@ export function CryptoProvider({ children }: { children: ReactNode }) {
  * Hook to access the current user's CryptoKeyPair.
  * Must be used inside a <CryptoProvider>.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCrypto(): CryptoContextValue {
     const ctx = useContext(CryptoContext)
     if (!ctx) {
