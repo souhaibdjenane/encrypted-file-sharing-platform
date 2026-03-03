@@ -60,6 +60,7 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
         let statusCodeSuffix = '';
 
         if (error instanceof Error && 'context' in error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const functionsError = error as any;
             if (functionsError.context?.status) {
                 statusCodeSuffix = ` (HTTP ${functionsError.context.status})`;

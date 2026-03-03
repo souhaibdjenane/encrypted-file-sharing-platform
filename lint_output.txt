@@ -1,0 +1,16 @@
+
+> test@0.0.0 lint
+> eslint .
+
+
+C:\Users\admin\Desktop\VaultShare\encrypted-file-sharing-platform\src\api\filesApi.ts
+  63:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\admin\Desktop\VaultShare\encrypted-file-sharing-platform\src\contexts\CryptoContext.tsx
+  60:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  62:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  64:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+✖ 4 problems (1 error, 3 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.
+
