@@ -68,9 +68,18 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
+      - name: Verify Vercel Credentials
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "::error::VERCEL_TOKEN is not set in GitHub Secrets"
+            exit 1
+          fi
+          echo "VERCEL_TOKEN is present"
+
       - name: Deploy to Vercel
-        run: npx vercel deploy dist --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel deploy dist --prod --yes
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: team_1NLBWcGQnv5NsHEDOOZbDeLT
           VERCEL_PROJECT_ID: prj_3Kq6UrnAvMfZTeiFnZwqzOhXl7NG
 
