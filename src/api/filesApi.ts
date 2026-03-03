@@ -57,20 +57,28 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
     if (error) {
         // Attempt to extract the JSON error message from the Edge Function
         let errorMsg = error.message;
-        if (error.context && error.context.status) {
-            try {
-                const contextStr = await error.context.text();
-                if (contextStr) {
-                    const parsed = JSON.parse(contextStr);
-                    if (parsed.error) {
-                        errorMsg = parsed.error;
+        let statusCodeSuffix = '';
+
+        if (error instanceof Error && 'context' in error) {
+            const functionsError = error as any;
+            if (functionsError.context?.status) {
+                statusCodeSuffix = ` (HTTP ${functionsError.context.status})`;
+                try {
+                    const contextStr = await functionsError.context.text();
+                    if (contextStr) {
+                        const parsed = JSON.parse(contextStr);
+                        if (parsed.error) {
+                            errorMsg = parsed.error;
+                        } else {
+                            errorMsg = contextStr;
+                        }
                     }
+                } catch {
+                    // Ignore parse errors, fallback to default message
                 }
-            } catch {
-                // Ignore parse errors, fallback to default message
             }
         }
-        throw new Error(errorMsg || `Error invoking ${functionName}`)
+        throw new Error(`${errorMsg}${statusCodeSuffix}` || `Error invoking ${functionName}${statusCodeSuffix}`)
     }
 
     if (!data) {
