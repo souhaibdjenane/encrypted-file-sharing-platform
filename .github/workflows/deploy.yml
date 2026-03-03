@@ -46,7 +46,7 @@ jobs:
   deploy-vercel:
     name: Deploy Frontend → Vercel
     runs-on: ubuntu-latest
-    needs: deploy-frontend   # wait for GitHub Pages deploy to succeed first
+    # needs: deploy-frontend   # decoupling from GitHub Pages
 
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
   deploy-edge-functions:
     name: Deploy Edge Functions → Supabase
     runs-on: ubuntu-latest
-    needs: deploy-frontend   # wait for frontend deploy to succeed first
+    needs: deploy-vercel   # wait for Vercel deploy to succeed first
 
     steps:
       - name: Checkout
