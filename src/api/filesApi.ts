@@ -59,15 +59,20 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
     const { data: sessionData } = await supabase.auth.getSession()
     const accessToken = sessionData?.session?.access_token
 
-    console.debug(`[filesApi] invokeEdgeFunction(${functionName}) — session:`, accessToken ? `found (${accessToken.slice(0, 20)}...)` : 'MISSING')
-
     if (!accessToken) {
-        throw new Error('You must be logged in to perform this action. Please sign in and try again.')
+        throw new Error('You must be logged in in to perform this action. Please sign in and try again.')
     }
 
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
     const url = `${supabaseUrl}/functions/v1/${functionName}`
+
+    // --- DEBUG CHECK: Detect invalid 'xxx' key ---
+    if (supabaseAnonKey.includes('xxx')) {
+        console.error(' [CRITICAL] Your VITE_SUPABASE_ANON_KEY in .env.local contains "xxx". This key is invalid!')
+        console.warn(' Please copy the REAL key from Supabase Dashboard -> Settings -> API -> anon public.')
+    }
+    // --------------------------------------------
 
     console.debug(`[filesApi] POST ${url}`)
 
@@ -94,6 +99,14 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
         } catch {
             errorMsg = text || errorMsg
         }
+
+        if (response.status === 401 && errorMsg.includes('Invalid JWT')) {
+            console.error(' [AUTH ERROR 401] Your JWT is rejected by Supabase API gateway.')
+            console.warn(' This usually means either:')
+            console.warn(' 1. The VITE_SUPABASE_ANON_KEY in .env.local is wrong (current key length:', supabaseAnonKey.length, ')')
+            console.warn(' 2. You are still logged in with a session from an OLD key. Try logging out and back in.')
+        }
+
         throw new Error(`${errorMsg} (HTTP ${response.status})`)
     }
 
@@ -103,8 +116,6 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
         throw new Error(`Invalid JSON response from ${functionName}`)
     }
 }
-
-
 
 export const filesApi = {
     async getUploadPresignUrl(req: UploadPresignRequest): Promise<UploadPresignResponse> {
@@ -137,10 +148,6 @@ export const filesApi = {
         },
         wrappedKey: string
     ) {
-        // We need to insert into `files` first, then `file_keys`.
-        // Since we are client-side, we must do this sequentially to respect FK constraints
-        // OR use an RPC function. For simplicity, we'll do sequential here.
-
         const { error: fileError } = await supabase
             .from('files')
             .insert(fileRecord)
@@ -156,7 +163,6 @@ export const filesApi = {
             })
 
         if (keyError) {
-            // Cleanup the file record if key insertion fails (client-side transaction simulation)
             await supabase.from('files').delete().eq('id', fileRecord.id);
             throw new Error(`Failed to insert wrapped key: ${keyError.message}`)
         }
