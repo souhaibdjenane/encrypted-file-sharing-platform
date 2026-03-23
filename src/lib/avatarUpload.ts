@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase } from '../api/supabaseClient'
 
 /**
  * Compress an image file to a small JPEG data URL (200×200 max, 75% quality).

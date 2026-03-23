@@ -9,7 +9,7 @@
  *   4. Upload the base64 SPKI public key to Supabase user_metadata.
  */
 
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/api/supabaseClient'
 import { generateKeyPair, exportPublicKey } from './keys'
 import { storeKeyPair, loadKeyPair } from './keyStorage'
 

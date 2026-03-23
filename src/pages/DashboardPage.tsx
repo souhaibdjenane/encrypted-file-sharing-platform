@@ -1,7 +1,7 @@
 import { useState, useRef, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/store/authStore'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/api/supabaseClient'
 import { uploadAvatar, updateProfile } from '@/lib/avatarUpload'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'

@@ -16,6 +16,7 @@ import { wrapFileKey } from '../crypto/keyWrap'
 import { arrayBufferToBase64 } from '../crypto/utils'
 import { validateFileType } from '../crypto/magicBytes'
 import { filesApi } from '../api/filesApi'
+import { supabase } from '../api/supabaseClient'
 import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -170,6 +171,15 @@ export function useUpload() {
         } catch (err: unknown) {
             console.error('[useUpload]', err)
             const msg = err instanceof Error ? err.message : 'Upload failed'
+            
+            // Handle authentication errors by signing out
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
+                console.warn('[useUpload] Authentication error detected, signing out user')
+                await supabase.auth.signOut()
+                setState(s => ({ ...s, stage: 'error', error: 'Session expired. Please log in again.' }))
+                return
+            }
+            
             const userMsg = msg.includes('key') || msg.includes('crypto') || msg.includes('decrypt')
                 ? 'Encryption error. Please try again.'
                 : msg

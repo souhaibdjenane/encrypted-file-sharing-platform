@@ -1,7 +1,7 @@
 import { useState, useRef, type FormEvent, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/api/supabaseClient'
 import { uploadAvatar } from '@/lib/avatarUpload'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'

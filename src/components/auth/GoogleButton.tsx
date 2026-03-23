@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/api/supabaseClient'
 
 interface GoogleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     mode?: 'signin' | 'signup'

@@ -7,6 +7,7 @@
  */
 import { useState, useCallback } from 'react'
 import { filesApi } from '../api/filesApi'
+import { supabase } from '../api/supabaseClient'
 import { unwrapFileKey } from '../crypto/keyWrap'
 import { decryptFile } from '../crypto/decrypt'
 import { base64ToArrayBuffer } from '../crypto/utils'
@@ -77,6 +78,16 @@ export function useDownload(
         } catch (err: unknown) {
             console.error('[useDownload]', err)
             const raw = err instanceof Error ? err.message : 'Unknown error'
+            
+            // Handle authentication errors by signing out
+            if (raw.includes('Invalid JWT') || raw.includes('HTTP 401')) {
+                console.warn('[useDownload] Authentication error detected, signing out user')
+                await supabase.auth.signOut()
+                setError('Session expired. Please log in again.')
+                setStage('error')
+                return
+            }
+            
             // Sanitise — never surface raw crypto internals
             const userMsg = raw.includes('key') || raw.includes('decrypt') || raw.includes('crypto')
                 ? 'Decryption failed. Your key may not match this file.'

@@ -47,47 +47,64 @@ export interface RevokeAccessResponse {
 
 /**
  * Helper to standardise Edge Function calls and error throwing.
+ *
+ * Uses raw fetch() instead of supabase.functions.invoke() to have full
+ * control over the headers. The SDK's invoke() always injects an
+ * `apikey: <anonKey>` header from client initialization — if that key is
+ * wrong, Supabase's API gateway returns 401 BEFORE the request reaches
+ * the Edge Function. With fetch() we send only what the Edge Function needs.
  */
 async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promise<T> {
-    const { data, error } = await supabase.functions.invoke<T>(functionName, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        body: body as any,
+    // Get the current session so we can attach the user's JWT
+    const { data: sessionData } = await supabase.auth.getSession()
+    const accessToken = sessionData?.session?.access_token
+
+    console.debug(`[filesApi] invokeEdgeFunction(${functionName}) — session:`, accessToken ? `found (${accessToken.slice(0, 20)}...)` : 'MISSING')
+
+    if (!accessToken) {
+        throw new Error('You must be logged in to perform this action. Please sign in and try again.')
+    }
+
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+    const url = `${supabaseUrl}/functions/v1/${functionName}`
+
+    console.debug(`[filesApi] POST ${url}`)
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // Supabase gateway requires apikey to route the request
+            'apikey': supabaseAnonKey,
+            // Edge Function verifyAuth() validates this user JWT
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(body),
     })
 
-    if (error) {
-        // Attempt to extract the JSON error message from the Edge Function
-        let errorMsg = error.message;
-        let statusCodeSuffix = '';
+    const text = await response.text()
+    console.debug(`[filesApi] ${functionName} → HTTP ${response.status}:`, text)
 
-        if (error instanceof Error && 'context' in error) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const functionsError = error as any;
-            if (functionsError.context?.status) {
-                statusCodeSuffix = ` (HTTP ${functionsError.context.status})`;
-                try {
-                    const contextStr = await functionsError.context.text();
-                    if (contextStr) {
-                        const parsed = JSON.parse(contextStr);
-                        if (parsed.error) {
-                            errorMsg = parsed.error;
-                        } else {
-                            errorMsg = contextStr;
-                        }
-                    }
-                } catch {
-                    // Ignore parse errors, fallback to default message
-                }
-            }
+    if (!response.ok) {
+        let errorMsg = `HTTP ${response.status}`
+        try {
+            const parsed = JSON.parse(text)
+            errorMsg = parsed.error ?? parsed.message ?? errorMsg
+        } catch {
+            errorMsg = text || errorMsg
         }
-        throw new Error(`${errorMsg}${statusCodeSuffix}` || `Error invoking ${functionName}${statusCodeSuffix}`)
+        throw new Error(`${errorMsg} (HTTP ${response.status})`)
     }
 
-    if (!data) {
-        throw new Error(`No data returned from ${functionName}`);
+    try {
+        return JSON.parse(text) as T
+    } catch {
+        throw new Error(`Invalid JSON response from ${functionName}`)
     }
-
-    return data
 }
+
+
 
 export const filesApi = {
     async getUploadPresignUrl(req: UploadPresignRequest): Promise<UploadPresignResponse> {

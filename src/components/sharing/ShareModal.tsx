@@ -144,6 +144,15 @@ export function ShareModal({ isOpen, onClose, fileId, fileName, wrappedKeyBase64
             setTimeout(() => { setShareSuccess(null); setTab('access') }, 1200)
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : 'Failed to share file'
+            
+            // Handle authentication errors by signing out
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
+                console.warn('[ShareModal] Authentication error detected, signing out user')
+                await supabase.auth.signOut()
+                setShareError('Session expired. Please log in again.')
+                return
+            }
+            
             setShareError(msg)
         } finally {
             setShareLoading(false)
@@ -162,6 +171,14 @@ export function ShareModal({ isOpen, onClose, fileId, fileName, wrappedKeyBase64
             // Roll back
             setShares(prev => prev.map(s => s.id === shareId ? { ...s, revoked: false } : s))
             console.error('Revoke failed:', err)
+            
+            const msg = err instanceof Error ? err.message : 'Failed to revoke access'
+            // Handle authentication errors by signing out
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
+                console.warn('[ShareModal] Authentication error detected, signing out user')
+                await supabase.auth.signOut()
+                // Maybe show an error, but since signing out, perhaps not
+            }
         } finally {
             setRevokingId(null)
         }
