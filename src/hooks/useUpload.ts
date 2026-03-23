@@ -16,7 +16,6 @@ import { wrapFileKey } from '../crypto/keyWrap'
 import { arrayBufferToBase64 } from '../crypto/utils'
 import { validateFileType } from '../crypto/magicBytes'
 import { filesApi } from '../api/filesApi'
-import { supabase } from '../api/supabaseClient'
 import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
