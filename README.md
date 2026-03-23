@@ -101,7 +101,7 @@ Create `.env.local`:
 | Variable | Required | Description |
 |---|---|---|
 | `VITE_SUPABASE_URL` | ✅ | Your Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | ✅ | Supabase `anon` public key |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | ✅ | Supabase `publishable` key |
 | `VITE_SENTRY_DSN` | ⬜ | Sentry DSN (omit to disable monitoring) |
 
 Edge Function secrets:
@@ -119,7 +119,7 @@ Add in **Settings → Secrets → Actions**:
 | Secret | Description |
 |---|---|
 | `VITE_SUPABASE_URL` | Supabase URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anon key |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key |
 | `VITE_SENTRY_DSN` | Sentry DSN |
 | `SUPABASE_PROJECT_REF` | Project ref (e.g. `duqbxtucdgrhwcfohfqd`) |
 | `SUPABASE_ACCESS_TOKEN` | Supabase personal access token |

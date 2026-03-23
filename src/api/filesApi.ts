@@ -64,13 +64,13 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
     }
 
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+    const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string
     const url = `${supabaseUrl}/functions/v1/${functionName}`
 
     // --- DEBUG CHECK: Detect invalid 'xxx' key ---
-    if (supabaseAnonKey.includes('xxx')) {
-        console.error(' [CRITICAL] Your VITE_SUPABASE_ANON_KEY in .env.local contains "xxx". This key is invalid!')
-        console.warn(' Please copy the REAL key from Supabase Dashboard -> Settings -> API -> anon public.')
+    if (supabasePublishableKey.includes('xxx')) {
+        console.error(' [CRITICAL] Your VITE_SUPABASE_PUBLISHABLE_KEY in .env.local contains "xxx". This key is invalid!')
+        console.warn(' Please copy the REAL key from Supabase Dashboard -> Settings -> API.')
     }
     // --------------------------------------------
 
@@ -81,7 +81,7 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
         headers: {
             'Content-Type': 'application/json',
             // Supabase gateway requires apikey to route the request
-            'apikey': supabaseAnonKey,
+            'apikey': supabasePublishableKey,
             // Edge Function verifyAuth() validates this user JWT
             'Authorization': `Bearer ${accessToken}`,
         },
@@ -101,9 +101,9 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
         }
 
         if (response.status === 401 && errorMsg.includes('Invalid JWT')) {
-            console.error(' [AUTH ERROR 401] Your JWT is rejected by Supabase API gateway.')
+            console.error(' [AUTH ERROR 401] Your key or session is rejected by Supabase.')
             console.warn(' This usually means either:')
-            console.warn(' 1. The VITE_SUPABASE_ANON_KEY in .env.local is wrong (current key length:', supabaseAnonKey.length, ')')
+            console.warn(' 1. The VITE_SUPABASE_PUBLISHABLE_KEY in .env.local is wrong (current key length:', supabasePublishableKey.length, ')')
             console.warn(' 2. You are still logged in with a session from an OLD key. Try logging out and back in.')
         }
 
