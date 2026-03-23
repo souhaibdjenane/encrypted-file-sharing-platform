@@ -171,15 +171,14 @@ export function useUpload() {
         } catch (err: unknown) {
             console.error('[useUpload]', err)
             const msg = err instanceof Error ? err.message : 'Upload failed'
-            
-            // Handle authentication errors by signing out
+
+            // Handle authentication errors
             if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
-                console.warn('[useUpload] Authentication error detected, signing out user')
-                await supabase.auth.signOut()
-                setState(s => ({ ...s, stage: 'error', error: 'Session expired. Please log in again.' }))
+                console.warn('[useUpload] Authentication error detected. This often happens if you changed your .env.local keys but are still using an old login session.')
+                setState(s => ({ ...s, stage: 'error', error: 'Authentication error (401). Please log out and log back in to refresh your keys.' }))
                 return
             }
-            
+
             const userMsg = msg.includes('key') || msg.includes('crypto') || msg.includes('decrypt')
                 ? 'Encryption error. Please try again.'
                 : msg
