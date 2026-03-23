@@ -80,7 +80,7 @@ export function useDownload(
             const raw = err instanceof Error ? err.message : 'Unknown error'
             
             // Handle authentication errors by signing out
-            if (raw.includes('Invalid JWT') || raw.includes('HTTP 401')) {
+            if (raw.includes('Invalid JWT') || raw.includes('HTTP 401') || raw.includes('Edge Function returned a non-2xx status code')) {
                 console.warn('[useDownload] Authentication error detected, signing out user')
                 await supabase.auth.signOut()
                 setError('Session expired. Please log in again.')

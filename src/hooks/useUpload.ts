@@ -18,6 +18,7 @@ import { validateFileType } from '../crypto/magicBytes'
 import { filesApi } from '../api/filesApi'
 import { useCrypto } from '../contexts/CryptoContext'
 import { useAuthStore } from '../store/authStore'
+import { supabase } from '../api/supabaseClient'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - Vite specific syntax which may or may not be an error depending on environment
 import EncryptWorkerInstance from '../workers/encrypt.worker?worker'
@@ -172,9 +173,10 @@ export function useUpload() {
             const msg = err instanceof Error ? err.message : 'Upload failed'
 
             // Handle authentication errors
-            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
-                console.warn('[useUpload] Authentication error detected. This often happens if you changed your .env.local keys but are still using an old login session.')
-                setState(s => ({ ...s, stage: 'error', error: 'Authentication error (401). Please log out and log back in to refresh your keys.' }))
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401') || msg.includes('Edge Function returned a non-2xx status code')) {
+                console.warn('[useUpload] Authentication error detected, signing out user')
+                await supabase.auth.signOut()
+                setState(s => ({ ...s, stage: 'error', error: 'Session expired. Please log in again.' }))
                 return
             }
 

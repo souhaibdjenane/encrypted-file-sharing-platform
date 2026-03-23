@@ -146,7 +146,7 @@ export function ShareModal({ isOpen, onClose, fileId, fileName, wrappedKeyBase64
             const msg = err instanceof Error ? err.message : 'Failed to share file'
             
             // Handle authentication errors by signing out
-            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401') || msg.includes('Edge Function returned a non-2xx status code')) {
                 console.warn('[ShareModal] Authentication error detected, signing out user')
                 await supabase.auth.signOut()
                 setShareError('Session expired. Please log in again.')
@@ -174,10 +174,10 @@ export function ShareModal({ isOpen, onClose, fileId, fileName, wrappedKeyBase64
             
             const msg = err instanceof Error ? err.message : 'Failed to revoke access'
             // Handle authentication errors by signing out
-            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401')) {
+            if (msg.includes('Invalid JWT') || msg.includes('HTTP 401') || msg.includes('Edge Function returned a non-2xx status code')) {
                 console.warn('[ShareModal] Authentication error detected, signing out user')
                 await supabase.auth.signOut()
-                // Maybe show an error, but since signing out, perhaps not
+                setSharesError('Session expired. Please log in again.')
             }
         } finally {
             setRevokingId(null)
