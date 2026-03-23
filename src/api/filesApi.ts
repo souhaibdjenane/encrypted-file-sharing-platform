@@ -48,73 +48,30 @@ export interface RevokeAccessResponse {
 /**
  * Helper to standardise Edge Function calls and error throwing.
  *
- * Uses raw fetch() instead of supabase.functions.invoke() to have full
- * control over the headers. The SDK's invoke() always injects an
- * `apikey: <anonKey>` header from client initialization — if that key is
- * wrong, Supabase's API gateway returns 401 BEFORE the request reaches
- * the Edge Function. With fetch() we send only what the Edge Function needs.
+ * Reverted to supabase.functions.invoke() which handles the newer
+ * `sb_publishable_` keys and auth headers correctly.
  */
 async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promise<T> {
-    // Get the current session so we can attach the user's JWT
-    const { data: sessionData } = await supabase.auth.getSession()
-    const accessToken = sessionData?.session?.access_token
-
-    if (!accessToken) {
-        throw new Error('You must be logged in in to perform this action. Please sign in and try again.')
-    }
-
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
-    const url = `${supabaseUrl}/functions/v1/${functionName}`
-
-    // --- DEBUG CHECK: Detect invalid 'xxx' key ---
-    if (supabaseAnonKey.includes('xxx')) {
-        console.error(' [CRITICAL] Your VITE_SUPABASE_ANON_KEY in .env.local contains "xxx". This key is invalid!')
-        console.warn(' Please copy the REAL key from Supabase Dashboard -> Settings -> API -> anon public.')
-    }
-    // --------------------------------------------
-
-    console.debug(`[filesApi] POST ${url}`)
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // Supabase gateway requires apikey to route the request
-            'apikey': supabaseAnonKey,
-            // Edge Function verifyAuth() validates this user JWT
-            'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(body),
+    const { data, error } = await supabase.functions.invoke(functionName, {
+        body,
     })
 
-    const text = await response.text()
-    console.debug(`[filesApi] ${functionName} → HTTP ${response.status}:`, text)
+    if (error) {
+        console.error(`[filesApi] ${functionName} error:`, error)
 
-    if (!response.ok) {
-        let errorMsg = `HTTP ${response.status}`
-        try {
-            const parsed = JSON.parse(text)
-            errorMsg = parsed.error ?? parsed.message ?? errorMsg
-        } catch {
-            errorMsg = text || errorMsg
+        // Enhance 401 error messaging for the user
+        const isAuthError = error.message?.includes('401') || error.message?.includes('Invalid JWT')
+        if (isAuthError) {
+            const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+            console.warn(' [AUTH ERROR 401] This usually means your .env.local key is wrong or your session is stale.')
+            console.warn(` Current key length: ${anonKey.length}`)
+            throw new Error(`Authentication error (401). Please log out and log back in to refresh your keys.`)
         }
 
-        if (response.status === 401 && errorMsg.includes('Invalid JWT')) {
-            console.error(' [AUTH ERROR 401] Your JWT is rejected by Supabase API gateway.')
-            console.warn(' This usually means either:')
-            console.warn(' 1. The VITE_SUPABASE_ANON_KEY in .env.local is wrong (current key length:', supabaseAnonKey.length, ')')
-            console.warn(' 2. You are still logged in with a session from an OLD key. Try logging out and back in.')
-        }
-
-        throw new Error(`${errorMsg} (HTTP ${response.status})`)
+        throw new Error(`${error.message || 'Unknown error'} (Edge Function)`)
     }
 
-    try {
-        return JSON.parse(text) as T
-    } catch {
-        throw new Error(`Invalid JSON response from ${functionName}`)
-    }
+    return data as T
 }
 
 export const filesApi = {
