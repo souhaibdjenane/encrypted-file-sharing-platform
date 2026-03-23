@@ -67,13 +67,6 @@ async function invokeEdgeFunction<T>(functionName: string, body: unknown): Promi
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
     const url = `${supabaseUrl}/functions/v1/${functionName}`
 
-    // --- DEBUG CHECK: Detect invalid 'xxx' key ---
-    if (supabaseAnonKey.includes('xxx')) {
-        console.error(' [CRITICAL] Your VITE_SUPABASE_ANON_KEY in .env.local contains "xxx". This key is invalid!')
-        console.warn(' Please copy the REAL key from Supabase Dashboard -> Settings -> API -> anon public.')
-    }
-    // --------------------------------------------
-
     console.debug(`[filesApi] POST ${url}`)
 
     const response = await fetch(url, {
