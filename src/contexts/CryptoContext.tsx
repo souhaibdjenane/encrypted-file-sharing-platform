@@ -57,11 +57,8 @@ export function CryptoProvider({ children }: { children: ReactNode }) {
             initKeys(user.id)
         } else {
             // User logged out — clear keys from memory
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeyPair(null)
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeysReady(false)
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setKeyError(null)
         }
     }, [user?.id, initKeys])

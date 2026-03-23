@@ -51,6 +51,7 @@ export interface RevokeAccessResponse {
  * Reverted to supabase.functions.invoke() which handles the newer
  * `sb_publishable_` keys and auth headers correctly.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function invokeEdgeFunction<T>(functionName: string, body: any): Promise<T> {
     const { data, error } = await supabase.functions.invoke(functionName, {
         body,
